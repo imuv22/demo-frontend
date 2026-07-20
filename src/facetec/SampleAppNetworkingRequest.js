@@ -20,6 +20,8 @@ export class SampleAppNetworkingRequest {
     ) {
         const sessionRequestCallPayload = {
             requestBlob: sessionRequestBlob,
+            testingApiHeader:
+                window.FaceTecSDK.getTestingAPIHeader(),
         };
 
         if (externalDatabaseRefID) {
@@ -44,16 +46,16 @@ export class SampleAppNetworkingRequest {
                 "application/json"
             );
 
-            // Required only while using FaceTec Testing API.
-            request.setRequestHeader(
-                "X-Device-Key",
-                Config.DeviceKeyIdentifier
-            );
+            request.withCredentials = true;
 
-            request.setRequestHeader(
-                "X-Testing-API-Header",
-                window.FaceTecSDK.getTestingAPIHeader()
-            );
+            const token = localStorage.getItem("token");
+
+            if (token) {
+                request.setRequestHeader(
+                    "Authorization",
+                    `Bearer ${token}`
+                );
+            }
 
             request.onload = () => {
                 const responseBlob =
@@ -129,39 +131,53 @@ export class SampleAppNetworkingRequest {
 
     static getResponseBlobOrHandleError(request) {
         if (request.status !== 200) {
+            const parsedErrorResponse = parseResponseJson(
+                request.responseText
+            );
+
             console.error(
                 `FaceTec server returned HTTP ${request.status}:`,
-                request.responseText
+                parsedErrorResponse?.message || "Request failed"
             );
 
             return null;
         }
 
-        try {
-            const parsedResponse = JSON.parse(
-                request.responseText
-            );
+        const parsedResponse = parseResponseJson(
+            request.responseText
+        );
 
-            if (
-                typeof parsedResponse.responseBlob !== "string" ||
-                !parsedResponse.responseBlob
-            ) {
-                console.error(
-                    "FaceTec response did not contain a responseBlob:",
-                    parsedResponse
-                );
-
-                return null;
-            }
-
-            return parsedResponse.responseBlob;
-        } catch (error) {
+        if (!parsedResponse) {
             console.error(
-                "Could not parse FaceTec response:",
-                error
+                "Could not parse FaceTec response."
             );
 
             return null;
         }
+
+        const responseBlob =
+            parsedResponse.responseBlob ||
+            parsedResponse.data?.responseBlob;
+
+        if (
+            typeof responseBlob !== "string" ||
+            !responseBlob
+        ) {
+            console.error(
+                "FaceTec response did not contain a responseBlob."
+            );
+
+            return null;
+        }
+
+        return responseBlob;
+    }
+}
+
+function parseResponseJson(responseText) {
+    try {
+        return JSON.parse(responseText);
+    } catch {
+        return null;
     }
 }

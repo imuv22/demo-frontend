@@ -6,6 +6,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { useLogout, useMe } from '../../hooks/adminHooks';
 
 const navItems = [
@@ -67,7 +68,15 @@ const Header = () => {
                         className="flex h-11 items-center gap-2 rounded-full border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 transition hover:border-teal-200 hover:text-teal-700 hover:shadow-sm"
                     >
                         <AccountCircleRoundedIcon fontSize="small" />
-                        {user?.name || 'Admin'}
+                        <span className="max-w-36 truncate">
+                            {user?.name || 'Admin'}
+                        </span>
+                        {user?.profilePictureVerified && (
+                            <VerifiedRoundedIcon
+                                className="shrink-0 text-sky-600"
+                                fontSize="small"
+                            />
+                        )}
                     </button>
                     <button
                         type="button"
@@ -109,7 +118,15 @@ const Header = () => {
                             className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-slate-200 text-sm font-bold text-slate-700"
                         >
                             <AccountCircleRoundedIcon fontSize="small" />
-                            {user?.name || 'Admin'}
+                            <span className="min-w-0 truncate">
+                                {user?.name || 'Admin'}
+                            </span>
+                            {user?.profilePictureVerified && (
+                                <VerifiedRoundedIcon
+                                    className="shrink-0 text-sky-600"
+                                    fontSize="small"
+                                />
+                            )}
                         </button>
                         <button
                             type="button"

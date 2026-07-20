@@ -23,3 +23,18 @@ export const uploadProfilePictureApi = async (file) => {
     return response.data.data;
 };
 
+export const createProfilePictureVerificationSessionApi = async () => {
+    const response = await api.post('/facetec/profile-picture/start');
+    return response.data.data;
+};
+
+export const completeProfilePictureVerificationApi = async (
+    payload
+) => {
+    const response = await api.post(
+        '/facetec/profile-picture/complete',
+        payload
+    );
+    return response.data.data;
+};
+

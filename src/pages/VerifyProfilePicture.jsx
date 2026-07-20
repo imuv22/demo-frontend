@@ -7,16 +7,10 @@ import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 
 import { startFaceTecEnrollment } from '../facetec/startFaceTecEnrollment.js';
-
-const createExternalDatabaseRefID = () => {
-    if (typeof crypto.randomUUID === 'function') {
-        return `matrimony_${crypto.randomUUID()}`;
-    }
-
-    return `matrimony_${Date.now()}_${Math.random()
-        .toString(36)
-        .slice(2)}`;
-};
+import {
+    useCompleteProfilePictureVerification,
+    useCreateProfilePictureVerificationSession,
+} from '../hooks/adminHooks.js';
 
 
 const VerifyProfilePicture = () => {
@@ -24,6 +18,10 @@ const VerifyProfilePicture = () => {
     const navigate = useNavigate();
 
     const sessionStartedRef = useRef(false);
+    const createVerificationSession =
+        useCreateProfilePictureVerificationSession();
+    const completeVerification =
+        useCompleteProfilePictureVerification();
 
     const [status, setStatus] = useState('initializing');
     const [errorMessage, setErrorMessage] = useState('');
@@ -35,8 +33,11 @@ const VerifyProfilePicture = () => {
             setErrorMessage('');
             setVerificationResult(null);
 
+            const verificationSession =
+                await createVerificationSession.mutateAsync();
+
             const externalDatabaseRefID =
-                createExternalDatabaseRefID();
+                verificationSession.externalDatabaseRefID;
 
             setStatus('scanning');
 
@@ -54,9 +55,21 @@ const VerifyProfilePicture = () => {
             };
 
             console.log(
-                'FaceTec enrollment completed:',
-                faceTecSessionResult
+                'FaceTec enrollment completed with status:',
+                faceTecSessionResult?.status
             );
+
+            const verificationResponse =
+                await completeVerification.mutateAsync({
+                    externalDatabaseRefID,
+                });
+
+            result.profilePictureVerified =
+                verificationResponse?.verification?.verified ===
+                true;
+            result.matchLevel =
+                verificationResponse?.verification?.matchLevel ??
+                null;
 
             setVerificationResult(result);
             setStatus('completed');
@@ -72,7 +85,7 @@ const VerifyProfilePicture = () => {
                 'Face verification could not be completed.'
             );
         }
-    }, []);
+    }, [completeVerification, createVerificationSession]);
 
     useEffect(() => {
         /*
@@ -175,12 +188,12 @@ const VerifyProfilePicture = () => {
                                 </span>
 
                                 <h2 className="mt-5 text-2xl font-black text-emerald-700">
-                                    Enrollment completed
+                                    Profile picture verified
                                 </h2>
 
                                 <p className="mt-2 max-w-md text-sm font-semibold text-slate-500">
-                                    FaceTec successfully completed
-                                    the live video selfie session.
+                                    The live FaceTec selfie matched
+                                    your current profile picture.
                                 </p>
 
                                 <div className="mt-6 w-full rounded-lg border border-slate-200 bg-slate-950 p-4 text-left text-sm text-slate-100">

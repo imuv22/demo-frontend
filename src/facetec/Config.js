@@ -1,4 +1,7 @@
 export var Config = (function () {
+    const normalizeApiBaseUrl = (url) =>
+        String(url || "").replace(/\/$/, "");
+
     // -------------------------------------
     // REQUIRED
     // Available at https://dev.facetec.com/account
@@ -8,7 +11,7 @@ export var Config = (function () {
     // -------------------------------------
     // REQUIRED
     // The URL to call to process FaceTec SDK Sessions.
-    // In Production, you likely will handle network requests elsewhere and without the use of this variable.
+    // This app calls the Node.js API, which forwards requests to FaceTec.
     // See https://dev.facetec.com/security-best-practices#server-rest-endpoint-security for more information.
     //
     // Developer Note: In Your Production Application, networking requests from Your App will call Your Webservice.
@@ -16,7 +19,8 @@ export var Config = (function () {
     // Please see the FaceTec Architecture Diagram here more information:  https://dev.facetec.com/configuration-options#zoom-architecture-and-data-flow
     //
     // This field is auto-populated by the FaceTec SDK Configuration Wizard.
-    var YOUR_API_OR_FACETEC_TESTING_API_ENDPOINT = "https://api.facetec.com/api/v4/biometrics/process-request";
+    var YOUR_API_OR_FACETEC_TESTING_API_ENDPOINT =
+        `${normalizeApiBaseUrl(import.meta.env.VITE_API_URL)}/facetec/session-request`;
 
     // This app can modify the customization to demonstrate different look/feel preferences
     // NOTE: This function is auto-populated by the FaceTec SDK Configuration Wizard based on your UI Customizations you picked in the Configuration Wizard GUI.
@@ -136,9 +140,9 @@ export var Config = (function () {
     }
     
     
-    var currentCustomization;
-    var currentLowLightCustomization;
-    var currentDynamicDimmingCustomization;
+    var currentCustomization = null;
+    var currentLowLightCustomization = null;
+    var currentDynamicDimmingCustomization = null;
 
     return {
         DeviceKeyIdentifier,

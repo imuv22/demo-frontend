@@ -101,8 +101,20 @@ const Home = () => {
                                 <AccountCircleRoundedIcon />
                             </span>
                             <div className="min-w-0">
-                                <h1 className="truncate text-2xl font-black tracking-tight text-slate-950">
-                                    {user?.name || 'Your profile'}
+                                <h1 className="flex min-w-0 items-center gap-2 text-2xl font-black tracking-tight text-slate-950">
+                                    <span className="truncate">
+                                        {user?.name || 'Your profile'}
+                                    </span>
+                                    {user?.profilePictureVerified && (
+                                        <span
+                                            title="Profile picture verified"
+                                            className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-sky-50 text-sky-600"
+                                        >
+                                            <VerifiedRoundedIcon
+                                                sx={{ fontSize: 18 }}
+                                            />
+                                        </span>
+                                    )}
                                 </h1>
                                 <p className="mt-1 truncate text-sm font-semibold text-slate-500">
                                     {user?.email || 'Signed in user'}
@@ -158,7 +170,11 @@ const Home = () => {
                                     Current image
                                 </p>
                                 <p className="mt-3 break-words text-lg font-black text-slate-950">
-                                    {user?.profilePicture?.url ? 'Profile picture saved' : 'No profile picture uploaded'}
+                                    {user?.profilePictureVerified
+                                        ? 'Verified profile picture'
+                                        : user?.profilePicture?.url
+                                            ? 'Profile picture saved'
+                                            : 'No profile picture uploaded'}
                                 </p>
                                 <p className="mt-2 text-sm font-semibold text-slate-500">
                                     JPG, PNG, or WEBP. Maximum file size: 6MB.
@@ -181,7 +197,9 @@ const Home = () => {
                                 className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-teal-600 px-5 text-sm font-black text-white shadow-sm shadow-teal-900/20 transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none"
                             >
                                 <VerifiedRoundedIcon fontSize="small" />
-                                Verify profile picture
+                                {user?.profilePictureVerified
+                                    ? 'Re-verify profile picture'
+                                    : 'Verify profile picture'}
                             </button>
                         </div>
                     </div>

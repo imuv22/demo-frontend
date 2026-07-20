@@ -1,5 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { loginApi, meApi, signupApi, uploadProfilePictureApi } from "../apis/adminApis";
+import {
+    completeProfilePictureVerificationApi,
+    createProfilePictureVerificationSessionApi,
+    loginApi,
+    meApi,
+    signupApi,
+    uploadProfilePictureApi,
+} from "../apis/adminApis";
 import { failedToast, successToast } from "../utils/Toaster";
 
 const getErrorMessage = (error) =>
@@ -59,6 +66,30 @@ export const useUploadProfilePicture = () => {
         onSuccess: (user) => {
             queryClient.setQueryData(['me'], user);
             successToast('Profile picture updated');
+        },
+        onError: (error) => {
+            failedToast(getErrorMessage(error));
+        },
+    });
+};
+
+export const useCreateProfilePictureVerificationSession = () => {
+    return useMutation({
+        mutationFn: createProfilePictureVerificationSessionApi,
+        onError: (error) => {
+            failedToast(getErrorMessage(error));
+        },
+    });
+};
+
+export const useCompleteProfilePictureVerification = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: completeProfilePictureVerificationApi,
+        onSuccess: (payload) => {
+            queryClient.setQueryData(['me'], payload.user);
+            successToast('Profile picture verified');
         },
         onError: (error) => {
             failedToast(getErrorMessage(error));
