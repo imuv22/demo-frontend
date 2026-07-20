@@ -15,7 +15,6 @@ const Login = lazy(() => import('./pages/Login'));
 
 //private
 const Home = lazy(() => import('./pages/Home'));
-const VerificationReturn = lazy(() => import('./pages/VerificationReturn'));
 
 
 function App() {
@@ -36,7 +35,6 @@ function App() {
                     {/* private */}
                     <Route element={<Protector user={user} />}>
                         <Route path='/' element={<Layout><Home /></Layout>} />
-                        <Route path='/verification/return' element={<Layout><VerificationReturn /></Layout>} />
                     </Route>
 
                     {/* public */}

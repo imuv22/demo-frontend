@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { loginApi, meApi, signupApi } from "../apis/adminApis";
+import { loginApi, meApi, signupApi, uploadProfilePictureApi } from "../apis/adminApis";
 import { failedToast, successToast } from "../utils/Toaster";
 
 const getErrorMessage = (error) =>
@@ -48,6 +48,21 @@ export const useMe = () => {
         queryFn: meApi,
         enabled: hasToken,
         retry: false,
+    });
+};
+
+export const useUploadProfilePicture = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: uploadProfilePictureApi,
+        onSuccess: (user) => {
+            queryClient.setQueryData(['me'], user);
+            successToast('Profile picture updated');
+        },
+        onError: (error) => {
+            failedToast(getErrorMessage(error));
+        },
     });
 };
 

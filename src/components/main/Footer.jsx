@@ -19,17 +19,15 @@ const Footer = () => {
                             <span className="text-lg font-black tracking-tight">VerifyDesk</span>
                         </Link>
                         <p className="mt-4 max-w-md text-sm leading-6 text-slate-600">
-                            A focused workspace for identity verification teams handling document checks, risk review, and approval workflows.
+                            A focused workspace for profile picture upload and identity verification.
                         </p>
                     </div>
 
                     <div>
                         <h2 className="text-sm font-black uppercase tracking-[0.18em] text-slate-500">Workspace</h2>
                         <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-700">
-                            <a href="#overview" className="transition hover:text-teal-700">Overview</a>
-                            <a href="#photo" className="transition hover:text-teal-700">Photo upload</a>
-                            <a href="#video" className="transition hover:text-teal-700">Video capture</a>
-                            <a href="#result" className="transition hover:text-teal-700">Result</a>
+                            <a href="#profile" className="transition hover:text-teal-700">Profile</a>
+                            <a href="#upload" className="transition hover:text-teal-700">Photo upload</a>
                         </div>
                     </div>
 

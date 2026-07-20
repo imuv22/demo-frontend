@@ -9,10 +9,8 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useLogout, useMe } from '../../hooks/adminHooks';
 
 const navItems = [
-    { label: 'Overview', href: '#overview' },
-    { label: 'Photo', href: '#photo' },
-    { label: 'Video', href: '#video' },
-    { label: 'Result', href: '#result' },
+    { label: 'Profile', href: '#profile' },
+    { label: 'Upload', href: '#upload' },
 ];
 
 const Header = () => {

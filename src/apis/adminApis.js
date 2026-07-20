@@ -15,3 +15,11 @@ export const meApi = async () => {
     return response.data.data;
 };
 
+export const uploadProfilePictureApi = async (file) => {
+    const formData = new FormData();
+    formData.append('profilePicture', file);
+
+    const response = await api.post('/admin/profile-picture', formData);
+    return response.data.data;
+};
+
