@@ -15,6 +15,7 @@ const Login = lazy(() => import('./pages/Login'));
 
 //private
 const Home = lazy(() => import('./pages/Home'));
+const VerifyProfilePicture = lazy(() => import('./pages/VerifyProfilePicture'));
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
                     {/* private */}
                     <Route element={<Protector user={user} />}>
                         <Route path='/' element={<Layout><Home /></Layout>} />
+                        <Route path='/verify-profile-picture' element={<Layout><VerifyProfilePicture /></Layout>} />
                     </Route>
 
                     {/* public */}

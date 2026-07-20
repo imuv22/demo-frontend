@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
 import ImageRoundedIcon from '@mui/icons-material/ImageRounded';
@@ -17,7 +18,10 @@ const getInitials = (name = '') =>
         .map((part) => part.charAt(0).toUpperCase())
         .join('') || 'U';
 
+
 const Home = () => {
+
+    const navigate = useNavigate();
     const [photoPreview, setPhotoPreview] = useState('');
     const [fileError, setFileError] = useState('');
     const photoInputRef = useRef(null);
@@ -76,6 +80,16 @@ const Home = () => {
             },
         });
     };
+
+    const handleVerifyProfilePicture = () => {
+        if (!user?.profilePicture?.url) {
+            setFileError('Upload and save a profile picture before verification.');
+            return;
+        }
+
+        navigate('/verify-profile-picture');
+    };
+
 
     return (
         <div className="min-h-screen bg-[#f6f8fb] text-slate-950">
@@ -159,7 +173,12 @@ const Home = () => {
 
                             <button
                                 type="button"
-                                className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-teal-600 px-5 text-sm font-black text-white shadow-sm shadow-teal-900/20 transition hover:bg-teal-700"
+                                onClick={handleVerifyProfilePicture}
+                                disabled={
+                                    uploadProfilePicture.isPending ||
+                                    !user?.profilePicture?.url
+                                }
+                                className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-teal-600 px-5 text-sm font-black text-white shadow-sm shadow-teal-900/20 transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none"
                             >
                                 <VerifiedRoundedIcon fontSize="small" />
                                 Verify profile picture
